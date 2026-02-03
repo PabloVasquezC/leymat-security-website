@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react"
-
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Phone, Mail, MapPin, Send, MessageCircle } from "lucide-react";
+import { toast } from "sonner";
 
 const contactInfo = [
   {
@@ -28,23 +28,51 @@ const contactInfo = [
   },
 ];
 
-export default function Contact() {
+const Contact = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
+    service: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Create WhatsApp message
-    const message = `Hola LEYMAT Seguridad Privada!\n\nNombre: ${formData.name}\nEmail: ${formData.email}\nTeléfono: ${formData.phone}\n\nMensaje: ${formData.message}`;
-    const whatsappUrl = `https://wa.me/56958006127?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
-  };
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsSubmitting(true);
+
+    // Create FormData object from state
+    const data = new FormData();
+    Object.entries(formData).forEach(([key, value]) => {
+      data.append(key, value);
+    });
+
+    try {
+      const { sendEmail } = await import("@/app/actions");
+      const result = await sendEmail(data);
+
+      if (result.success) {
+        toast.success("Mensaje enviado exitosamente. Nos pondremos en contacto pronto.");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "",
+          message: "",
+        });
+      } else {
+        toast.error("Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.");
+      }
+    } catch (error) {
+      toast.error("Error inesperado. Por favor, intenta nuevamente.");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <section id="contacto" className="py-24 bg-primary" ref={ref}>
@@ -158,6 +186,7 @@ export default function Contact() {
                     }
                     className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
                     placeholder="Tu nombre"
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -178,6 +207,7 @@ export default function Contact() {
                     }
                     className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
                     placeholder="tu@email.com"
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -198,7 +228,32 @@ export default function Contact() {
                     }
                     className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
                     placeholder="+56 9 XXXX XXXX"
+                    disabled={isSubmitting}
                   />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="service"
+                    className="block text-sm font-medium text-card-foreground mb-2"
+                  >
+                    Servicio
+                  </label>
+                  <select
+                    id="service"
+                    required
+                    value={formData.service}
+                    onChange={(e) =>
+                      setFormData({ ...formData, service: e.target.value })
+                    }
+                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
+                    disabled={isSubmitting}
+                  >
+                    <option value="" disabled>Selecciona un servicio</option>
+                    <option value="seguridad">Seguridad</option>
+                    <option value="aseo">Aseo</option>
+                    <option value="ambos">Ambos</option>
+                  </select>
                 </div>
 
                 <div>
@@ -218,6 +273,7 @@ export default function Contact() {
                     }
                     className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground resize-none"
                     placeholder="¿En qué podemos ayudarte?"
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -225,10 +281,17 @@ export default function Contact() {
                   type="submit"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors"
+                  disabled={isSubmitting}
+                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-5 h-5" />
-                  Enviar Mensaje
+                  {isSubmitting ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      Enviar Mensaje
+                    </>
+                  )}
                 </motion.button>
               </div>
             </form>
@@ -238,3 +301,5 @@ export default function Contact() {
     </section>
   );
 }
+
+export default Contact;

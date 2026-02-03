@@ -10,6 +10,7 @@ import {
   UserCheck,
   Camera,
   Car,
+  Trash,
 } from "lucide-react";
 
 const services = [
@@ -59,9 +60,9 @@ const services = [
     description:
       "Gestión profesional de ingreso y salida de personas y vehículos en instalaciones.",
     features: [
-      "Registro biométrico",
       "Control vehicular",
       "Gestión de visitas",
+      "Control de acceso",
     ],
   },
   {
@@ -71,10 +72,22 @@ const services = [
       "Servicios de protección personal y traslado seguro de valores y personas.",
     features: [
       "Rutas seguras",
-      "Vehículos blindados",
+      "Escolta y transporte de cargas pesadas",
       "Personal de élite",
     ],
   },
+
+  // aseo empresarial
+  {
+    icon: Trash,
+    title: "Aseo Empresarial",
+    description: "Servicios de limpieza profesional para empresas.",
+    features: [
+      "Limpieza de oficinas",
+      "Limpieza de baños",
+      "Limpieza de vidrios",
+    ],
+  }
 ];
 
 export default function Services() {

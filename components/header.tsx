@@ -11,7 +11,6 @@ const navLinks = [
   { name: "Nosotros", href: "#nosotros" },
   { name: "Servicios", href: "#servicios" },
   { name: "Galería", href: "#galeria" },
-  { name: "Contacto", href: "#contacto" },
 ];
 
 export default function Header() {
@@ -64,7 +63,7 @@ export default function Header() {
           <Link href="#inicio" className="flex items-center gap-3">
             <div className="relative w-14 h-14">
               <Image
-                src="/images/3.png"
+                src="/logo.png"
                 alt="LEYMAT Logo"
                 fill
                 className="object-contain"

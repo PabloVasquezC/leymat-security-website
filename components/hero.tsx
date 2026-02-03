@@ -61,9 +61,9 @@ export default function Hero() {
               transition={{ delay: 0.3 }}
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight mb-6"
             >
-              <span className="block">SEGURIDAD</span>
-              <span className="block text-accent">PRIVADA</span>
               <span className="block">LEYMAT</span>
+              <span className="block">SEGURIDAD</span>
+              <span className="block">PRIVADA</span>
             </motion.h1>
 
             <motion.p
@@ -91,15 +91,7 @@ export default function Hero() {
                 Solicitar Cotización
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </motion.a>
-              <motion.a
-                href="tel:+56958006127"
-                className="inline-flex items-center justify-center gap-2 border-2 border-primary-foreground/30 hover:border-primary-foreground/50 text-primary-foreground px-8 py-4 rounded-lg font-semibold transition-all"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Phone className="w-5 h-5" />
-                Llamar Ahora
-              </motion.a>
+              
             </motion.div>
 
             {/* Stats */}
@@ -110,7 +102,7 @@ export default function Hero() {
               className="grid grid-cols-3 gap-6 mt-12 pt-12 border-t border-primary-foreground/10"
             >
               {[
-                { value: "15+", label: "Años de Experiencia" },
+                { value: "Nacional", label: "Cobertura" },
                 { value: "100+", label: "Clientes Satisfechos" },
                 { value: "24/7", label: "Disponibilidad" },
               ].map((stat, index) => (

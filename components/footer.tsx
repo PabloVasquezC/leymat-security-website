@@ -25,7 +25,7 @@ export default function Footer() {
             <Link href="#inicio" className="flex items-center gap-3 mb-6">
               <div className="relative w-16 h-16">
                 <Image
-                  src="/images/3.png"
+                  src="/logo.png"
                   alt="LEYMAT Logo"
                   fill
                   className="object-contain"
@@ -41,9 +41,11 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-primary-foreground/70 max-w-md leading-relaxed">
-              Años de experiencia al servicio de las empresas. Brindamos
-              soluciones de seguridad integral con personal altamente capacitado
-              y certificado por OS-10 de Carabineros de Chile.
+              Brindamos soluciones de seguridad integral, con guardias altamente capacitados y supervisores certificados por OS-10.
+            </p>
+            <br />
+            <p className="text-primary-foreground/70 max-w-md leading-relaxed">
+              Prestación de servicios de aseo empresarial para entidades publicas y privadas, con personal calificado para brindar soluciones integrales
             </p>
           </div>
 
