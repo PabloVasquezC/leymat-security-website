@@ -47,6 +47,13 @@ export default function Header() {
             +56 9 58006127
           </a>
           <a
+            href="tel:+56938854399"
+            className="flex items-center gap-2 hover:text-primary-foreground transition-colors"
+          >
+            <Phone className="w-4 h-4" />
+            +56 9 38854399
+          </a>
+          <a
             href="mailto:leymatseguridad@gmail.com"
             className="flex items-center gap-2 hover:text-primary-foreground transition-colors"
           >
