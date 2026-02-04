@@ -5,6 +5,7 @@ import Services from "@/components/services";
 import Gallery from "@/components/gallery";
 import Contact from "@/components/contact";
 import Footer from "@/components/footer";
+import { N8nChat } from "@/components/N8n";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       {/* <Gallery /> */}
       <Contact />
       <Footer />
+      <N8nChat />
     </main>
   );
 }
