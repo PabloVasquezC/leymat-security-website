@@ -22,7 +22,7 @@ const services = [
     features: [
       "Control de acceso", 
       "Rondas de perimetrales", 
-      "Video vigilacia",
+      "Video vigilancia",
       "Informes semanales",
     ],
   },
