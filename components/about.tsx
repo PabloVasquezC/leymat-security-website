@@ -50,8 +50,8 @@ export default function About() {
           >
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
               <Image
-                src="/images/about-generic.png"
-                alt="LEYMAT - Seguridad y Aseo Integral"
+                src="/images/guardia.png"
+                alt="LEYMAT - Guardia de Seguridad Privada"
                 fill
                 className="object-cover"
               />

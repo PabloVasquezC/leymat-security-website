@@ -19,7 +19,12 @@ const services = [
     title: "Seguridad Empresarial",
     description:
       "Protección integral para empresas, oficinas e instalaciones industriales con guardias especializados.",
-    features: ["Control de acceso", "Rondas de vigilancia", "Informes diarios"],
+    features: [
+      "Control de acceso", 
+      "Rondas de perimetrales", 
+      "Video vigilacia",
+      "Informes semanales",
+    ],
   },
   {
     icon: Calendar,

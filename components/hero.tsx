@@ -96,7 +96,7 @@ export default function Hero() {
           >
             {[
               { value: "Cobertura", label: "Nacional" },
-              { value: "24/7", label: "Disponibilidad" },
+              { value: "Disponibilidad", label: "24/7" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-accent drop-shadow-sm">

@@ -68,12 +68,14 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="#inicio" className="flex items-center gap-3">
-            <div className="relative w-14 h-14">
+             {/* la imagen debe estar centrada en un circulo blanco */}
+            <div className="relative w-14 h-14 rounded-full bg-secondary flex items-center justify-center p-2">
               <Image
                 src="/logo.png"
                 alt="LEYMAT Logo"
-                fill
-                className="object-contain"
+                width={50}
+                height={50}
+                className="w-full h-full object-contain"
                 priority
               />
             </div>

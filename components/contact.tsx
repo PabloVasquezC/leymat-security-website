@@ -4,6 +4,7 @@ import React from "react"
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Phone, Mail, MapPin, Send, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
@@ -18,7 +19,7 @@ const contactInfo = [
     icon: Mail,
     label: "Email",
     value: "leymatseguridad@gmail.com",
-    href: "mailto:leymatseguridad@gmail.com",
+    href: "mailto:vascor.pablo@gmail.com",
   },
   {
     icon: MapPin,
@@ -29,6 +30,7 @@ const contactInfo = [
 ];
 
 const Contact = () => {
+  const router = useRouter();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [formData, setFormData] = useState({
@@ -55,7 +57,8 @@ const Contact = () => {
       const result = await sendEmail(data);
 
       if (result.success) {
-        toast.success("Mensaje enviado exitosamente. Nos pondremos en contacto pronto.");
+        // toast.success("Mensaje enviado exitosamente. Nos pondremos en contacto pronto."); // Optional: keep or remove
+        router.push("/gracias");
         setFormData({
           name: "",
           email: "",
