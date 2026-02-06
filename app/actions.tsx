@@ -15,7 +15,7 @@ export async function sendEmail(formData: FormData) {
     try {
         const { data, error } = await resend.emails.send({
             from: "Leymat Seguridad <onboarding@resend.dev>",
-            to: ["leymatseguridad@gmail.com"],
+            to: ["barbara.caro@centrossercotec.cl"],
             replyTo: email,
             subject: `Nueva Cotización: ${name} - ${service}`,
             react: <EmailTemplate

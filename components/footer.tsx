@@ -122,7 +122,7 @@ export default function Footer() {
               reservados.
             </p>
             <p>
-              Sitio construido por{" "}
+              Este sitio fue construido por{" "}
               <a
                 href="https://fluxia.cl"
                 target="_blank"
