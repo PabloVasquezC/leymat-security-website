@@ -1,12 +1,12 @@
 "use client";
 
-import React from "react"
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Phone, Mail, MapPin, Send, MessageCircle } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+// @ts-ignore
+import { useActionState } from "react";
+import { Phone, Mail, MapPin, Send, MessageCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { submitContactForm } from "@/app/actions/submit-contact";
 
 const contactInfo = [
   {
@@ -19,7 +19,7 @@ const contactInfo = [
     icon: Mail,
     label: "Email",
     value: "leymatseguridad@gmail.com",
-    href: "mailto:vascor.pablo@gmail.com",
+    href: "mailto:leymatseguridad@gmail.com",
   },
   {
     icon: MapPin,
@@ -30,52 +30,22 @@ const contactInfo = [
 ];
 
 const Contact = () => {
-  const router = useRouter();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    service: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsSubmitting(true);
+  const [state, formAction, isPending] = useActionState(submitContactForm, { success: false, message: '' });
 
-    // Create FormData object from state
-    const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      data.append(key, value);
-    });
+  // Client-side state for conditional fields
+  const [selectedTipo, setSelectedTipo] = useState("");
 
-    try {
-      const { sendEmail } = await import("@/app/actions");
-      const result = await sendEmail(data);
-
-      if (result.success) {
-        // toast.success("Mensaje enviado exitosamente. Nos pondremos en contacto pronto."); // Optional: keep or remove
-        router.push("/gracias");
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          service: "",
-          message: "",
-        });
-      } else {
-        toast.error("Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.");
-      }
-    } catch (error) {
-      toast.error("Error inesperado. Por favor, intenta nuevamente.");
-      console.error(error);
-    } finally {
-      setIsSubmitting(false);
+  useEffect(() => {
+    if (state.success) {
+      toast.success(state.message);
+      setSelectedTipo("");
+    } else if (state.message && !state.success) {
+      toast.error(state.message);
     }
-  }
+  }, [state]);
 
   return (
     <section id="contacto" className="py-24 bg-primary" ref={ref}>
@@ -163,141 +133,202 @@ const Contact = () => {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <form
-              onSubmit={handleSubmit}
-              className="bg-card rounded-2xl p-8 shadow-xl"
-            >
-              <h3 className="text-xl font-bold text-card-foreground mb-6">
-                Solicita una Cotización
-              </h3>
-
-              <div className="space-y-5">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-card-foreground mb-2"
-                  >
-                    Nombre Completo
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    required
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
-                    placeholder="Tu nombre"
-                    disabled={isSubmitting}
-                  />
+            {state.success ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-card rounded-2xl p-8 shadow-xl h-full flex flex-col items-center justify-center text-center space-y-6"
+              >
+                <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center border-2 border-green-500/20">
+                  <CheckCircle2 className="w-10 h-10 text-green-600" />
                 </div>
-
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-card-foreground mb-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
-                    placeholder="tu@email.com"
-                    disabled={isSubmitting}
-                  />
+                  <h3 className="text-2xl font-bold text-card-foreground mb-2">¡Mensaje Enviado!</h3>
+                  <p className="text-card-foreground/70 text-lg">
+                    Gracias por contactarnos. Nos pondremos en contacto contigo a la brevedad.
+                  </p>
                 </div>
-
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-card-foreground mb-2"
-                  >
-                    Teléfono
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    required
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
-                    placeholder="+56 9 XXXX XXXX"
-                    disabled={isSubmitting}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="service"
-                    className="block text-sm font-medium text-card-foreground mb-2"
-                  >
-                    Servicio
-                  </label>
-                  <select
-                    id="service"
-                    required
-                    value={formData.service}
-                    onChange={(e) =>
-                      setFormData({ ...formData, service: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
-                    disabled={isSubmitting}
-                  >
-                    <option value="" disabled>Selecciona un servicio</option>
-                    <option value="seguridad">Seguridad</option>
-                    <option value="aseo">Aseo</option>
-                    <option value="ambos">Ambos</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-medium text-card-foreground mb-2"
-                  >
-                    Mensaje
-                  </label>
-                  <textarea
-                    id="message"
-                    required
-                    rows={4}
-                    value={formData.message}
-                    onChange={(e) =>
-                      setFormData({ ...formData, message: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground resize-none"
-                    placeholder="¿En qué podemos ayudarte?"
-                    disabled={isSubmitting}
-                  />
-                </div>
-
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  disabled={isSubmitting}
-                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                <button
+                  onClick={() => window.location.reload()}
+                  className="mt-4 text-accent font-medium hover:underline"
                 >
-                  {isSubmitting ? (
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-                  ) : (
-                    <>
-                      <Send className="w-5 h-5" />
-                      Enviar Mensaje
-                    </>
+                  Enviar otro mensaje
+                </button>
+              </motion.div>
+            ) : (
+              <form
+                action={formAction}
+                className="bg-card rounded-2xl p-8 shadow-xl"
+              >
+                <h3 className="text-xl font-bold text-card-foreground mb-6">
+                  Solicita una Cotización
+                </h3>
+
+                <div className="space-y-5">
+                  <div>
+                    <label
+                      htmlFor="nombre"
+                      className="block text-sm font-medium text-card-foreground mb-2"
+                    >
+                      Nombre Completo <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="nombre"
+                      name="nombre"
+                      required
+                      className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
+                      placeholder="Tu nombre"
+                    />
+                    {state.errors?.nombre && <p className="text-xs text-red-500 mt-1">{state.errors.nombre[0]}</p>}
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-5">
+                    <div>
+                      <label
+                        htmlFor="correo"
+                        className="block text-sm font-medium text-card-foreground mb-2"
+                      >
+                        Email <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        id="correo"
+                        name="correo"
+                        required
+                        className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
+                        placeholder="tu@email.com"
+                      />
+                      {state.errors?.correo && <p className="text-xs text-red-500 mt-1">{state.errors.correo[0]}</p>}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="celular"
+                        className="block text-sm font-medium text-card-foreground mb-2"
+                      >
+                        Teléfono <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        id="celular"
+                        name="celular"
+                        required
+                        className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
+                        placeholder="+56 9 XXXX XXXX"
+                      />
+                      {state.errors?.celular && <p className="text-xs text-red-500 mt-1">{state.errors.celular[0]}</p>}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="tipo"
+                      className="block text-sm font-medium text-card-foreground mb-2"
+                    >
+                      ¿Eres empresa o persona natural? <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      id="tipo"
+                      name="tipo"
+                      required
+                      value={selectedTipo}
+                      onChange={(e) => setSelectedTipo(e.target.value)}
+                      className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground appearance-none"
+                    >
+                      <option value="" disabled>Seleccionar...</option>
+                      <option value="Empresa">Empresa</option>
+                      <option value="Persona natural">Persona natural</option>
+                    </select>
+                    {state.errors?.tipo && <p className="text-xs text-red-500 mt-1">{state.errors.tipo[0]}</p>}
+                  </div>
+
+                  {selectedTipo === 'Empresa' && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="overflow-hidden"
+                    >
+                      <label
+                        htmlFor="nombreEmpresa"
+                        className="block text-sm font-medium text-card-foreground mb-2"
+                      >
+                        Nombre de la Empresa <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="nombreEmpresa"
+                        name="nombreEmpresa"
+                        required
+                        className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground"
+                        placeholder="Nombre de tu empresa"
+                      />
+                      {state.errors?.nombreEmpresa && <p className="text-xs text-red-500 mt-1">{state.errors.nombreEmpresa[0]}</p>}
+                    </motion.div>
                   )}
-                </motion.button>
-              </div>
-            </form>
+
+                  <div>
+                    <label
+                      htmlFor="servicio"
+                      className="block text-sm font-medium text-card-foreground mb-2"
+                    >
+                      Servicio <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      id="servicio"
+                      name="servicio"
+                      required
+                      defaultValue=""
+                      className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground appearance-none"
+                    >
+                      <option value="" disabled>Selecciona un servicio</option>
+                      <option value="Seguridad">Seguridad</option>
+                      <option value="Aseo">Aseo</option>
+                      <option value="Ambos">Ambos</option>
+                    </select>
+                    {state.errors?.servicio && <p className="text-xs text-red-500 mt-1">{state.errors.servicio[0]}</p>}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="mensaje"
+                      className="block text-sm font-medium text-card-foreground mb-2"
+                    >
+                      Mensaje <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      id="mensaje"
+                      name="mensaje"
+                      required
+                      rows={4}
+                      className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-foreground resize-none"
+                      placeholder="¿En qué podemos ayudarte?"
+                    />
+                    {state.errors?.mensaje && <p className="text-xs text-red-500 mt-1">{state.errors.mensaje[0]}</p>}
+                  </div>
+
+                  <motion.button
+                    type="submit"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    disabled={isPending}
+                    className="w-full bg-accent hover:bg-accent/90 text-accent-foreground py-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isPending ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Enviando...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-5 h-5" />
+                        Enviar Mensaje
+                      </>
+                    )}
+                  </motion.button>
+                </div>
+              </form>
+            )}
           </motion.div>
         </div>
       </div>
