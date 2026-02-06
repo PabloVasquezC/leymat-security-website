@@ -116,10 +116,23 @@ export default function Footer() {
           viewport={{ once: true }}
           className="mt-12 pt-8 border-t border-primary-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4"
         >
-          <p className="text-primary-foreground/60 text-sm text-center md:text-left">
-            © {currentYear} LEYMAT Seguridad Privada. Todos los derechos
-            reservados.
-          </p>
+          <div className="text-primary-foreground/60 text-sm text-center md:text-left space-y-1">
+            <p>
+              © {currentYear} LEYMAT Seguridad Privada. Todos los derechos
+              reservados.
+            </p>
+            <p>
+              Sitio construido por{" "}
+              <a
+                href="https://fluxia.cl"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium hover:text-primary-foreground transition-colors"
+              >
+                Fluxia
+              </a>
+            </p>
+          </div>
           <p className="text-primary-foreground/60 text-sm">
             Empresa Certificada OS-10 Carabineros de Chile
           </p>
