@@ -28,7 +28,6 @@ export const metadata: Metadata = {
     ],
     apple: "/logo.png",
   },
-  generator: 'v0.app'
 };
 
 export const viewport: Viewport = {
